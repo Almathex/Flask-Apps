@@ -1,31 +1,53 @@
+from flask import Flask, render_template, redirect, url_for
 from aplication import app, db
-from aplication.models import Todo
+from aplication.models import ToDo
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+@app.route('/')
+def index():
+    return render_template('index.html', todoList = ToDo.query.all())
 
-@app.route('/add')
+@app.route('/add', methods=['GET', 'POST'])
 def add():
-    new_todo = Todo(name="New To-do", status = '0')
-    db.session.add(new_todo)
-    db.session.commit()
-    return "Added new to-do to database"
+    error = ""
+    form = Form()
 
-@app.route('/read')
-def read():
-    all_todo = Todo.query.all()
-    todo_string = ""
-    for todo in all_todo:
-        todo_string += "<br>"+ todo.name
-    return todo_string
+    if request.method == 'POST':
+        task = form.task.data
+        l
 
-@app.route('/update/<name>')
-def update(name):
-    first_todo = Todo.query.first()
-    first_todo.name = name
+        if len(first_name) == 0:
+            error = "Please supply a task."
+        else:
+            return 'thank you'
+    db.session.add(form)
     db.session.commit()
-    return first_todo.name
+    return render_template('index.html', form=form, message=error)
 
-@app.route('/delete/<int:id>')
-def delete(id):
-    todo_to_delete = Todo.query.get(id)
-    db.session.delete(todo_to_delete)
+@app.route('/complete/<idNum>')
+def complete(idNum):
+    task= ToDo.query.get(idNum)
+    task.complete=1
     db.session.commit()
-    return "Deleted Task"
+    return redirect(url_for('index'))
+
+@app.route('/incomplete/<idNum>')
+def incomplete(idNum):
+    task= ToDo.query.get(idNum)
+    task.complete=0
+    db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route('/update/<idNum>/<newTask>')
+def update(idNum,newTask):
+    task= ToDo.query.get(idNum)
+    task.task=newTask
+    db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route('/delete/<idNum>')
+def delete(idNum):
+    task_1= ToDo.query.get(idNum)
+    db.session.delete(task_1)
+    db.session.commit()
+    return redirect(url_for('index'))

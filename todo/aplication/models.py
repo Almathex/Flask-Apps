@@ -1,7 +1,12 @@
 from aplication import db
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
 
-class Todo(db.Model):
+class ToDo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name  = db.Column(db.String(30))
-    status = db.Column(db.String(30), nullable = False)
-    
+    task = db.Column(db.String(30), nullable =False)
+    complete = db.Column(db.Integer, nullable=False)
+
+class Form(FlaskForm):
+    task = StringField('First Name')
+    submit = SubmitField('Add task')    
