@@ -3,6 +3,7 @@ from aplication import app, db
 from aplication.models import ToDo
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
+from aplication.forms import TodoForm
 @app.route('/')
 def index():
     return render_template('index.html', todoList = ToDo.query.all())
